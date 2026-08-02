@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://artur-hiroki-portfolio.netlify.app/sitemap.xml

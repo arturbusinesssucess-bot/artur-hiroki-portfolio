@@ -1,0 +1,37 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050816"/>
+      <stop offset="100%" stop-color="#0B1020"/>
+    </linearGradient>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="50%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="80%" cy="10%" r="60%">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#60A5FA" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <text x="80" y="260" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#38BDF8" letter-spacing="1">
+    ARTUR<tspan fill="#FFFFFF">.</tspan>HIROKI
+  </text>
+
+  <text x="78" y="340" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800" fill="#FFFFFF">
+    Sites, Landing Pages,
+  </text>
+  <text x="78" y="415" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800" fill="url(#grad)">
+    PWAs &amp; Aplicações Web
+  </text>
+
+  <text x="80" y="480" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#CBD5E1">
+    Produtos web premium que transformam visitantes em clientes.
+  </text>
+
+  <rect x="78" y="530" width="220" height="2" fill="#1E293B"/>
+</svg>

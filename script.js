@@ -1,0 +1,321 @@
+(() => {
+  'use strict';
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(hover: none)').matches;
+
+  /* ---------------------------------------------------
+     Loader
+  --------------------------------------------------- */
+  const loader = document.getElementById('loader');
+  const MIN_LOAD_MS = reduceMotion ? 0 : 900;
+  const MAX_LOAD_MS = 2000;
+  const start = performance.now();
+
+  function hideLoader() {
+    const elapsed = performance.now() - start;
+    const wait = Math.min(Math.max(MIN_LOAD_MS - elapsed, 0), MAX_LOAD_MS);
+    setTimeout(() => {
+      loader && loader.classList.add('is-hidden');
+      document.body.classList.add('is-loaded');
+    }, wait);
+  }
+
+  if (document.readyState === 'complete') {
+    hideLoader();
+  } else {
+    window.addEventListener('load', hideLoader);
+    setTimeout(hideLoader, MAX_LOAD_MS);
+  }
+
+  /* ---------------------------------------------------
+     Scroll reveal
+  --------------------------------------------------- */
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window && revealEls.length) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+    revealEls.forEach((el) => revealObserver.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  /* ---------------------------------------------------
+     Nav: scrolled state + active section + progress
+  --------------------------------------------------- */
+  const siteNav = document.getElementById('siteNav');
+  const navLinks = document.querySelectorAll('[data-nav-link]');
+  const navLinksMobile = document.querySelectorAll('[data-nav-link-mobile]');
+  const sections = Array.from(navLinks)
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+  const navProgress = document.getElementById('navProgress');
+
+  function setActiveLink(id) {
+    navLinks.forEach((link) => {
+      link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+    });
+    navLinksMobile.forEach((link) => {
+      link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+    });
+  }
+
+  if ('IntersectionObserver' in window && sections.length) {
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActiveLink(entry.target.id);
+      });
+    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+    sections.forEach((sec) => navObserver.observe(sec));
+  }
+
+  function updateNavOnScroll() {
+    const scrollTop = window.scrollY;
+    siteNav && siteNav.classList.toggle('is-scrolled', scrollTop > 8);
+
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    if (navProgress) navProgress.style.width = `${pct}%`;
+  }
+  window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+  updateNavOnScroll();
+
+  /* ---------------------------------------------------
+     Mobile nav (hamburger)
+  --------------------------------------------------- */
+  const navBurger = document.getElementById('navBurger');
+  const navMobile = document.getElementById('navMobile');
+
+  function closeMobileNav() {
+    navBurger && navBurger.setAttribute('aria-expanded', 'false');
+    navMobile && navMobile.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  function toggleMobileNav() {
+    const isOpen = navMobile && navMobile.classList.contains('is-open');
+    if (isOpen) {
+      closeMobileNav();
+    } else {
+      navBurger && navBurger.setAttribute('aria-expanded', 'true');
+      navMobile && navMobile.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  navBurger && navBurger.addEventListener('click', toggleMobileNav);
+  navLinksMobile.forEach((link) => link.addEventListener('click', closeMobileNav));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileNav();
+  });
+
+  /* ---------------------------------------------------
+     Cursor glow
+  --------------------------------------------------- */
+  const cursorGlow = document.getElementById('cursorGlow');
+  if (cursorGlow && !isTouch && !reduceMotion) {
+    let raf = null;
+    window.addEventListener('mousemove', (e) => {
+      cursorGlow.classList.add('is-active');
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        cursorGlow.style.setProperty('--cx', `${e.clientX - 210}px`);
+        cursorGlow.style.setProperty('--cy', `${e.clientY - 210}px`);
+        raf = null;
+      });
+    });
+    window.addEventListener('mouseleave', () => cursorGlow.classList.remove('is-active'));
+  }
+
+  /* ---------------------------------------------------
+     Magnetic buttons
+  --------------------------------------------------- */
+  if (!isTouch && !reduceMotion) {
+    document.querySelectorAll('.magnetic').forEach((btn) => {
+      const strength = 0.25;
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) * strength;
+        const y = (e.clientY - rect.top - rect.height / 2) * strength;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  }
+
+  /* ---------------------------------------------------
+     Tilt cards
+  --------------------------------------------------- */
+  if (!isTouch && !reduceMotion) {
+    document.querySelectorAll('.tilt-card').forEach((card) => {
+      const maxTilt = 5;
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        const rx = (0.5 - py) * maxTilt;
+        const ry = (px - 0.5) * maxTilt;
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  /* ---------------------------------------------------
+     Animated counters
+  --------------------------------------------------- */
+  const counters = document.querySelectorAll('[data-count]');
+  function animateCounter(el) {
+    const target = parseFloat(el.getAttribute('data-count'));
+    const prefix = el.getAttribute('data-prefix') || '';
+    const suffix = el.getAttribute('data-suffix') || '';
+    const duration = reduceMotion ? 1 : 1200;
+    const startTime = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(target * eased);
+      el.textContent = `${prefix}${value}${suffix}`;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if ('IntersectionObserver' in window && counters.length) {
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => counterObserver.observe(el));
+  } else {
+    counters.forEach(animateCounter);
+  }
+
+  /* ---------------------------------------------------
+     FAQ accordion
+  --------------------------------------------------- */
+  document.querySelectorAll('.faq-trigger').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.faq-trigger').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  /* ---------------------------------------------------
+     Contact form (Netlify Forms + honeypot spam guard)
+  --------------------------------------------------- */
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('contactSubmit');
+  const success = document.getElementById('formSuccess');
+  const errorBanner = document.getElementById('formErrorBanner');
+
+  function encodeFormData(data) {
+    return Object.keys(data)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join('&');
+  }
+
+  function clearFieldErrors() {
+    form.querySelectorAll('.field-error').forEach((el) => { el.textContent = ''; });
+    form.querySelectorAll('.form-field').forEach((el) => el.classList.remove('has-error'));
+  }
+
+  function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorEl = document.getElementById(`${fieldId}-error`);
+    if (errorEl) errorEl.textContent = message;
+    if (field) field.closest('.form-field').classList.add('has-error');
+  }
+
+  function validateForm() {
+    clearFieldErrors();
+    let valid = true;
+
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const message = form.message.value.trim();
+
+    if (name.length < 2) {
+      showFieldError('name', 'Digite seu nome completo.');
+      valid = false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showFieldError('email', 'Digite um e-mail válido.');
+      valid = false;
+    }
+    if (message.length < 10) {
+      showFieldError('message', 'Conte um pouco mais sobre o projeto (mínimo 10 caracteres).');
+      valid = false;
+    }
+    // Honeypot: if filled, silently treat as spam (bail without alerting the bot)
+    if (form.querySelector('[name="empresa"]').value !== '') {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorBanner.classList.remove('is-visible');
+
+      if (!validateForm()) return;
+
+      submitBtn.classList.add('is-loading');
+      submitBtn.disabled = true;
+
+      const data = {};
+      new FormData(form).forEach((value, key) => { data[key] = value; });
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeFormData(data),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+          success.classList.add('is-visible');
+          form.reset();
+          clearFieldErrors();
+          setTimeout(() => success.classList.remove('is-visible'), 6000);
+        })
+        .catch(() => {
+          errorBanner.classList.add('is-visible');
+        })
+        .finally(() => {
+          submitBtn.classList.remove('is-loading');
+          submitBtn.disabled = false;
+        });
+    });
+
+    form.querySelectorAll('input, textarea').forEach((field) => {
+      field.addEventListener('input', () => {
+        const errorEl = document.getElementById(`${field.id}-error`);
+        if (errorEl && errorEl.textContent) {
+          errorEl.textContent = '';
+          field.closest('.form-field').classList.remove('has-error');
+        }
+      });
+    });
+  }
+})();
