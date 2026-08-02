@@ -767,6 +767,123 @@ body.is-loaded .hero-mockup[data-hero-item] { transition-delay: 0.4s; }
 }
 
 /* ===================================================
+   About
+=================================================== */
+.about-grid {
+  display: grid;
+  gap: var(--sp-16);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .about-grid { grid-template-columns: 0.85fr 1fr; gap: var(--sp-24); }
+}
+
+.about-visual {
+  position: relative;
+  max-width: 380px;
+  margin-inline: auto;
+}
+
+@media (min-width: 900px) {
+  .about-visual { margin-inline: 0; }
+}
+
+.about-photo-main {
+  position: relative;
+  z-index: 2;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  aspect-ratio: 4 / 5;
+}
+
+.about-photo-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-photo-card {
+  position: absolute;
+  z-index: 3;
+  right: -24px;
+  bottom: -32px;
+  width: 42%;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 3px solid var(--bg-secondary);
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.7);
+}
+
+.about-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.75) contrast(1.05);
+}
+
+.about-glow {
+  position: absolute;
+  z-index: 1;
+  top: -40px;
+  left: -40px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.35) 0%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.about-lead {
+  margin-top: var(--sp-6);
+  font-size: var(--fs-lg);
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+.about-text {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 56ch;
+}
+
+.about-facts {
+  margin-top: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.about-facts li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.about-facts svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--blue-light);
+}
+
+.about-content .btn { margin-top: var(--sp-8); }
+.about-content .btn .arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.about-content .btn:hover .arrow { transform: translateX(4px); }
+
+/* ===================================================
    Grid / Cards
 =================================================== */
 .grid {

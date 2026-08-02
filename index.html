@@ -81,6 +81,7 @@
 
     <nav class="nav-links" id="navLinks" aria-label="Navegação principal">
       <a href="#home" data-nav-link>Início<span class="nav-underline"></span></a>
+      <a href="#about" data-nav-link>Sobre<span class="nav-underline"></span></a>
       <a href="#services" data-nav-link>Serviços<span class="nav-underline"></span></a>
       <a href="#projects" data-nav-link>Projetos<span class="nav-underline"></span></a>
       <a href="#technologies" data-nav-link>Tecnologias<span class="nav-underline"></span></a>
@@ -102,6 +103,7 @@
 <div class="nav-mobile" id="navMobile">
   <nav class="nav-mobile-links" aria-label="Navegação mobile">
     <a href="#home" data-nav-link-mobile>Início</a>
+    <a href="#about" data-nav-link-mobile>Sobre</a>
     <a href="#services" data-nav-link-mobile>Serviços</a>
     <a href="#projects" data-nav-link-mobile>Projetos</a>
     <a href="#technologies" data-nav-link-mobile>Tecnologias</a>
@@ -164,6 +166,49 @@
     </div>
 
     <div class="hero-glow" aria-hidden="true"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section section-alt about-section">
+    <div class="container about-grid">
+      <div class="about-visual" data-reveal>
+        <div class="about-photo-main">
+          <img src="assets/artur-portrait.jpg" alt="Retrato de Artur Hiroki" width="640" height="800" loading="lazy" decoding="async">
+        </div>
+        <div class="about-photo-card">
+          <img src="assets/artur-candid.webp" alt="Artur Hiroki em ambiente casual" width="320" height="400" loading="lazy" decoding="async">
+        </div>
+        <div class="about-glow" aria-hidden="true"></div>
+      </div>
+
+      <div class="about-content">
+        <p class="section-eyebrow" data-reveal>Sobre</p>
+        <h2 class="section-title" data-reveal>Quem constrói o que você vê aqui</h2>
+        <p class="about-lead" data-reveal>
+          Eu sou o Artur — desenvolvedor por trás de cada projeto deste portfólio. Transformo ideias em produtos web rápidos, bonitos e funcionais, sempre com atenção aos detalhes que fazem diferença na experiência do usuário e no resultado do negócio.
+        </p>
+        <p class="about-text" data-reveal>
+          Trabalho sozinho, do primeiro rascunho ao deploy — o que significa comunicação direta, decisões rápidas e um único responsável pela qualidade do que é entregue. Nada se perde em repasses ou telefone sem fio entre equipes.
+        </p>
+
+        <ul class="about-facts" data-reveal-group>
+          <li data-reveal>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Baseado no Brasil, atendimento em português</span>
+          </li>
+          <li data-reveal>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 5L2 12l6 7M16 5l6 7-6 7"/></svg>
+            <span>Full-stack: design, código e deploy</span>
+          </li>
+          <li data-reveal>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2l2.6 6.2L21 9l-5 4.3L17.5 21 12 17.3 6.5 21 8 13.3 3 9l6.4-.8z"/></svg>
+            <span>Foco em conversão, não só em estética</span>
+          </li>
+        </ul>
+
+        <a href="#contact" class="btn btn-ghost btn-lg magnetic" data-reveal>Vamos conversar <span class="arrow">→</span></a>
+      </div>
+    </div>
   </section>
 
   <!-- SERVICES -->
@@ -668,6 +713,7 @@
 
     <nav class="footer-nav" aria-label="Navegação do rodapé">
       <a href="#home">Início</a>
+      <a href="#about">Sobre</a>
       <a href="#services">Serviços</a>
       <a href="#projects">Projetos</a>
       <a href="#technologies">Tecnologias</a>
