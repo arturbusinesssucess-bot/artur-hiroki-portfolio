@@ -564,30 +564,12 @@
         class="contact-form"
         id="contactForm"
         data-reveal
-        name="contact"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="empresa"
-        action="/obrigado"
       >
-        <input type="hidden" name="form-name" value="contact">
-        <p class="hp-field" aria-hidden="true">
-          <label>Não preencha este campo <input tabindex="-1" autocomplete="off" name="empresa"></label>
-        </p>
-
-        <div class="form-row">
-          <div class="form-field floating">
-            <input id="name" name="name" type="text" placeholder=" " required autocomplete="name" minlength="2" aria-describedby="name-error">
-            <label for="name">Nome</label>
-            <span class="field-line"></span>
-            <span class="field-error" id="name-error"></span>
-          </div>
-          <div class="form-field floating">
-            <input id="email" name="email" type="email" placeholder=" " required autocomplete="email" aria-describedby="email-error">
-            <label for="email">E-mail</label>
-            <span class="field-line"></span>
-            <span class="field-error" id="email-error"></span>
-          </div>
+        <div class="form-field floating">
+          <input id="name" name="name" type="text" placeholder=" " required autocomplete="name" minlength="2" aria-describedby="name-error">
+          <label for="name">Nome</label>
+          <span class="field-line"></span>
+          <span class="field-error" id="name-error"></span>
         </div>
         <div class="form-field floating">
           <select id="project" name="project">
@@ -609,16 +591,7 @@
         <button type="submit" class="btn btn-primary btn-lg btn-full magnetic" id="contactSubmit">
           <span class="btn-label">Solicitar Proposta</span>
         </button>
-        <p class="form-trust">Resposta em até 24 horas. Seus dados não são compartilhados.</p>
-
-        <div class="form-success" id="formSuccess" role="status" aria-live="polite">
-          <span class="success-check">✓</span>
-          <p>Mensagem enviada — respondo em até 24 horas.</p>
-        </div>
-
-        <div class="form-error-banner" id="formErrorBanner" role="alert" aria-live="assertive">
-          <p>Não foi possível enviar agora. Tente novamente ou fale direto pelo <a href="https://wa.me/5573999844036" target="_blank" rel="noopener">WhatsApp</a>.</p>
-        </div>
+        <p class="form-trust">Você será levado ao WhatsApp com a mensagem já preenchida.</p>
       </form>
     </div>
   </section>

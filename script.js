@@ -221,18 +221,10 @@
   });
 
   /* ---------------------------------------------------
-     Contact form (Netlify Forms + honeypot spam guard)
+     Contact form → redireciona para o WhatsApp com a mensagem pronta
   --------------------------------------------------- */
   const form = document.getElementById('contactForm');
-  const submitBtn = document.getElementById('contactSubmit');
-  const success = document.getElementById('formSuccess');
-  const errorBanner = document.getElementById('formErrorBanner');
-
-  function encodeFormData(data) {
-    return Object.keys(data)
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-      .join('&');
-  }
+  const WHATSAPP_NUMBER = '5573999844036';
 
   function clearFieldErrors() {
     form.querySelectorAll('.field-error').forEach((el) => { el.textContent = ''; });
@@ -251,23 +243,14 @@
     let valid = true;
 
     const name = form.name.value.trim();
-    const email = form.email.value.trim();
     const message = form.message.value.trim();
 
     if (name.length < 2) {
       showFieldError('name', 'Digite seu nome completo.');
       valid = false;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showFieldError('email', 'Digite um e-mail válido.');
-      valid = false;
-    }
     if (message.length < 10) {
       showFieldError('message', 'Conte um pouco mais sobre o projeto (mínimo 10 caracteres).');
-      valid = false;
-    }
-    // Honeypot: if filled, silently treat as spam (bail without alerting the bot)
-    if (form.querySelector('[name="empresa"]').value !== '') {
       valid = false;
     }
 
@@ -277,35 +260,17 @@
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      errorBanner.classList.remove('is-visible');
 
       if (!validateForm()) return;
 
-      submitBtn.classList.add('is-loading');
-      submitBtn.disabled = true;
+      const name = form.name.value.trim();
+      const project = form.project.value;
+      const message = form.message.value.trim();
 
-      const data = {};
-      new FormData(form).forEach((value, key) => { data[key] = value; });
+      const text = `Olá! Meu nome é ${name}.\nTipo de projeto: ${project}\n\n${message}`;
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
-      fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encodeFormData(data),
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-          success.classList.add('is-visible');
-          form.reset();
-          clearFieldErrors();
-          setTimeout(() => success.classList.remove('is-visible'), 6000);
-        })
-        .catch(() => {
-          errorBanner.classList.add('is-visible');
-        })
-        .finally(() => {
-          submitBtn.classList.remove('is-loading');
-          submitBtn.disabled = false;
-        });
+      window.open(url, '_blank', 'noopener');
     });
 
     form.querySelectorAll('input, textarea').forEach((field) => {
