@@ -1485,18 +1485,18 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
 
 .faq-item {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: border-color var(--dur-base) ease;
+  transition: background-color var(--dur-base) ease;
 }
-.faq-item:has(.faq-trigger[aria-expanded="true"]) { border-color: rgba(229, 229, 229, 0.4); }
+.faq-item:has(.faq-trigger[aria-expanded="true"]) { background: var(--surface-2); }
 
 .faq-trigger {
   width: 100%;
   cursor: pointer;
   font-size: var(--fs-sm);
   font-weight: 600;
+  color: var(--text-primary);
   background: none;
   border: none;
   padding: var(--sp-6);
@@ -1508,28 +1508,19 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
 }
 
 .faq-icon {
-  position: relative;
   width: 18px;
   height: 18px;
   flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.faq-icon::before,
-.faq-icon::after {
-  content: "";
-  position: absolute;
-  background: var(--blue-light);
-  border-radius: var(--radius-full);
-  transition: transform var(--dur-base) var(--ease-out);
-}
-.faq-icon::before { width: 100%; height: 2px; top: 8px; left: 0; }
-.faq-icon::after { width: 2px; height: 100%; top: 0; left: 8px; }
 
-.faq-trigger[aria-expanded="true"] .faq-icon::after { transform: rotate(90deg); }
+.faq-trigger[aria-expanded="true"] .faq-icon { transform: rotate(180deg); color: var(--text-primary); }
 
 .faq-panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--dur-base) var(--ease-in-out);
+  transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .faq-trigger[aria-expanded="true"] + .faq-panel { grid-template-rows: 1fr; }
@@ -1540,10 +1531,15 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
   color: var(--text-secondary);
   font-size: var(--fs-sm);
   line-height: 1.6;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .faq-trigger[aria-expanded="true"] + .faq-panel > p {
   padding-bottom: var(--sp-6);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ===================================================
