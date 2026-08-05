@@ -589,16 +589,31 @@
           <span class="field-line"></span>
           <span class="field-error" id="name-error"></span>
         </div>
-        <div class="form-field floating">
-          <select id="project" name="project">
+        <div class="form-field floating custom-select" id="projectField">
+          <label for="projectTrigger" class="label-static">Tipo de projeto</label>
+          <button type="button" class="custom-select-trigger" id="projectTrigger" aria-haspopup="listbox" aria-expanded="false" aria-describedby="project-error">
+            <span class="custom-select-value" data-is-placeholder="true">Selecione uma opção</span>
+            <svg class="custom-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <ul class="custom-select-menu" role="listbox" tabindex="-1" aria-labelledby="projectTrigger" hidden>
+            <li role="option" data-value="Site" tabindex="-1">Site</li>
+            <li role="option" data-value="Landing Page" tabindex="-1">Landing Page</li>
+            <li role="option" data-value="PWA" tabindex="-1">PWA</li>
+            <li role="option" data-value="Aplicação Web" tabindex="-1">Aplicação Web</li>
+            <li role="option" data-value="Slides" tabindex="-1">Slides</li>
+            <li role="option" data-value="Ainda não sei" tabindex="-1">Ainda não sei</li>
+          </ul>
+          <select id="project" name="project" aria-hidden="true" tabindex="-1">
+            <option value="">Selecione uma opção</option>
             <option>Site</option>
             <option>Landing Page</option>
             <option>PWA</option>
             <option>Aplicação Web</option>
+            <option>Slides</option>
             <option>Ainda não sei</option>
           </select>
-          <label for="project" class="label-static">Tipo de projeto</label>
           <span class="field-line"></span>
+          <span class="field-error" id="project-error"></span>
         </div>
         <div class="form-field floating">
           <textarea id="message" name="message" rows="5" placeholder=" " required minlength="10" aria-describedby="message-error"></textarea>

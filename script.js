@@ -226,6 +226,77 @@
   const form = document.getElementById('contactForm');
   const WHATSAPP_NUMBER = '5573999844036';
 
+  /* ---------------------------------------------------
+     Custom select (tipo de projeto)
+  --------------------------------------------------- */
+  const customSelect = document.getElementById('projectField');
+  if (customSelect) {
+    const trigger = document.getElementById('projectTrigger');
+    const menu = customSelect.querySelector('.custom-select-menu');
+    const valueEl = trigger.querySelector('.custom-select-value');
+    const nativeSelect = document.getElementById('project');
+    const options = Array.from(menu.querySelectorAll('li'));
+    let activeIndex = -1;
+
+    function closeMenu() {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function openMenu() {
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      const selected = options.findIndex((li) => li.getAttribute('aria-selected') === 'true');
+      setActive(selected >= 0 ? selected : 0);
+    }
+
+    function setActive(index) {
+      options.forEach((li) => li.classList.remove('is-active'));
+      activeIndex = index;
+      if (options[activeIndex]) {
+        options[activeIndex].classList.add('is-active');
+        options[activeIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function selectOption(li) {
+      options.forEach((opt) => opt.setAttribute('aria-selected', 'false'));
+      li.setAttribute('aria-selected', 'true');
+      valueEl.textContent = li.dataset.value;
+      valueEl.removeAttribute('data-is-placeholder');
+      nativeSelect.value = li.dataset.value;
+      nativeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      const errorEl = document.getElementById('project-error');
+      if (errorEl && errorEl.textContent) {
+        errorEl.textContent = '';
+        customSelect.classList.remove('has-error');
+      }
+      closeMenu();
+      trigger.focus();
+    }
+
+    trigger.addEventListener('click', () => {
+      if (menu.hidden) openMenu(); else closeMenu();
+    });
+
+    options.forEach((li) => {
+      li.addEventListener('click', () => selectOption(li));
+      li.addEventListener('mouseenter', () => setActive(options.indexOf(li)));
+    });
+
+    trigger.addEventListener('keydown', (e) => {
+      if (['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Escape'].includes(e.key)) e.preventDefault();
+      if (e.key === 'ArrowDown') { if (menu.hidden) { openMenu(); } else { setActive(Math.min(activeIndex + 1, options.length - 1)); } }
+      else if (e.key === 'ArrowUp') { if (menu.hidden) { openMenu(); } else { setActive(Math.max(activeIndex - 1, 0)); } }
+      else if (e.key === 'Enter' || e.key === ' ') { if (menu.hidden) { openMenu(); } else if (options[activeIndex]) { selectOption(options[activeIndex]); } }
+      else if (e.key === 'Escape') { closeMenu(); }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!customSelect.contains(e.target)) closeMenu();
+    });
+  }
+
   function clearFieldErrors() {
     form.querySelectorAll('.field-error').forEach((el) => { el.textContent = ''; });
     form.querySelectorAll('.form-field').forEach((el) => el.classList.remove('has-error'));
@@ -243,10 +314,15 @@
     let valid = true;
 
     const name = form.name.value.trim();
+    const project = form.project.value;
     const message = form.message.value.trim();
 
     if (name.length < 2) {
       showFieldError('name', 'Digite seu nome completo.');
+      valid = false;
+    }
+    if (!project) {
+      showFieldError('project', 'Selecione o tipo de projeto.');
       valid = false;
     }
     if (message.length < 10) {

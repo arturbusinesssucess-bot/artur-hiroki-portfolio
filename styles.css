@@ -1679,6 +1679,91 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
   color: var(--blue-light);
 }
 
+/* Custom select (replaces native <select>) */
+.custom-select { position: relative; }
+.custom-select > select { display: none; }
+
+.custom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-4);
+  padding-top: 22px;
+  padding-bottom: 10px;
+  min-height: 56px;
+  font: inherit;
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+
+.custom-select-trigger:focus-visible,
+.custom-select-trigger[aria-expanded="true"] {
+  outline: none;
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(229, 229, 229, 0.15);
+}
+
+.custom-select-value[data-is-placeholder="true"] { color: var(--text-muted); }
+
+.custom-select-chevron {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-select-trigger[aria-expanded="true"] .custom-select-chevron { transform: rotate(180deg); }
+
+.custom-select-menu {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + var(--sp-2));
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--sp-2);
+  max-height: 280px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.custom-select-menu[hidden] { display: none; }
+
+.custom-select-menu li {
+  padding: var(--sp-3) var(--sp-4);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.custom-select-menu li:hover,
+.custom-select-menu li.is-active {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.custom-select-menu li[aria-selected="true"] {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
 .field-line {
   position: absolute;
   left: 0;
@@ -1756,7 +1841,8 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
 
 .form-field.has-error input,
 .form-field.has-error textarea,
-.form-field.has-error select {
+.form-field.has-error select,
+.form-field.has-error .custom-select-trigger {
   border-color: #F87171;
 }
 
