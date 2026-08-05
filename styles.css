@@ -418,7 +418,7 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
   will-change: transform;
 }
 
-.btn-sm { padding: var(--sp-2) var(--sp-4); font-size: var(--fs-xs); }
+.btn-sm { padding: var(--sp-2) var(--sp-4); font-size: var(--fs-xs); min-height: 40px; }
 .btn-lg { padding: var(--sp-4) var(--sp-8); font-size: var(--fs-sm); }
 .btn-full { width: 100%; }
 
@@ -977,13 +977,19 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
 }
 
 @media (min-width: 560px) {
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 760px) {
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
 }
 @media (min-width: 1080px) {
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 900px) {
+  .grid-5 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1280px) {
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
 }
 
 .card-benefits {
@@ -1558,7 +1564,8 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
   display: inline-flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-5);
+  min-height: 44px;
+  padding: var(--sp-3) var(--sp-6);
   border-radius: var(--radius-full);
   border: 1px solid var(--border);
   background: var(--surface);
