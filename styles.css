@@ -1716,7 +1716,7 @@ body.is-loaded .hero-v2-stats[data-hero-item] { transition-delay: 0.7s; }
 .custom-select-chevron {
   width: 18px;
   height: 18px;
-  flex-shrink: 0;
+  flex: none;
   color: var(--text-muted);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
