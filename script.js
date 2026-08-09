@@ -210,6 +210,71 @@
   }
 
   /* ---------------------------------------------------
+     Animated testimonial-style photo gallery (About)
+  --------------------------------------------------- */
+  const testimonialItems = document.querySelectorAll('.testimonial-img-item');
+  if (testimonialItems.length) {
+    const quotes = [
+      'Cada projeto começa com uma pergunta simples: isso resolve o problema real do cliente?',
+      'Não entrego só código — entrego um produto pronto pra converter desde o primeiro dia.',
+      'Trabalho sozinho por escolha: comunicação direta, decisões rápidas, qualidade sob meu controle do início ao fim.',
+      'Detalhe que ninguém percebe é o que separa um site bom de um site que vende.',
+      'Meu objetivo não é só entregar — é que o cliente volte pro próximo projeto.',
+    ];
+
+    const textEl = document.getElementById('testimonialText');
+    const quoteEl = document.getElementById('testimonialQuote');
+    const prevBtn = document.getElementById('testimonialPrev');
+    const nextBtn = document.getElementById('testimonialNext');
+    const total = testimonialItems.length;
+    let active = 0;
+    let autoplayTimer = null;
+
+    function renderImages() {
+      testimonialItems.forEach((item) => {
+        const idx = Number(item.dataset.index);
+        const diff = (idx - active + total) % total;
+        item.classList.remove('is-active', 'is-behind-1', 'is-behind-2');
+        if (diff === 0) item.classList.add('is-active');
+        else if (diff === 1) item.classList.add('is-behind-1');
+        else if (diff === 2) item.classList.add('is-behind-2');
+      });
+    }
+
+    function renderText() {
+      textEl.classList.add('is-animating');
+      setTimeout(() => {
+        quoteEl.textContent = quotes[active] || quotes[0];
+        textEl.classList.remove('is-animating');
+      }, reduceMotion ? 0 : 220);
+    }
+
+    function goTo(index) {
+      active = (index + total) % total;
+      renderImages();
+      renderText();
+    }
+
+    function next() { goTo(active + 1); }
+    function prev() { goTo(active - 1); }
+
+    function startAutoplay() {
+      if (reduceMotion) return;
+      stopAutoplay();
+      autoplayTimer = setInterval(next, 5000);
+    }
+    function stopAutoplay() {
+      if (autoplayTimer) clearInterval(autoplayTimer);
+    }
+
+    nextBtn.addEventListener('click', () => { next(); startAutoplay(); });
+    prevBtn.addEventListener('click', () => { prev(); startAutoplay(); });
+
+    renderImages();
+    startAutoplay();
+  }
+
+  /* ---------------------------------------------------
      FAQ accordion
   --------------------------------------------------- */
   document.querySelectorAll('.faq-trigger').forEach((trigger) => {
