@@ -204,22 +204,6 @@ summary:focus-visible,
   pointer-events: none;
 }
 
-.bg-grid {
-  position: absolute;
-  inset: -1px;
-  background-image:
-    linear-gradient(rgba(203, 213, 225, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(203, 213, 225, 0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
-  animation: gridDrift 40s linear infinite;
-}
-
-@keyframes gridDrift {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 56px 56px, 56px 56px; }
-}
-
 .bg-orb {
   position: absolute;
   border-radius: 50%;
@@ -2041,5 +2025,5 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
 
   .loader { display: none !important; }
   .cursor-glow { display: none !important; }
-  .bg-grid, .bg-orb, .hero-glow, .mockup-float { animation: none !important; }
+  .bg-orb, .hero-glow, .mockup-float { animation: none !important; }
 }
