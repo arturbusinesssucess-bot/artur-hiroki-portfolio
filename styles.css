@@ -455,8 +455,10 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
   opacity: 0;
   transform: translateY(-12px);
   animation: navFadeIn 0.7s var(--ease-out) forwards 0.05s;
@@ -464,7 +466,7 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
 }
 
 .nav.is-scrolled {
-  background: rgba(5, 8, 22, 0.94);
+  background: rgba(5, 5, 5, 0.97);
   border-bottom: 1px solid var(--border);
 }
 
