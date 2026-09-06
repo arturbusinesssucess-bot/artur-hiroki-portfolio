@@ -137,6 +137,37 @@
   }
 
   /* ---------------------------------------------------
+     Custom cursor
+  --------------------------------------------------- */
+  const customCursor = document.getElementById('customCursor');
+  if (customCursor && !isTouch && !reduceMotion) {
+    document.body.classList.add('has-custom-cursor');
+    let cx = 0;
+    let cy = 0;
+    let cursorRaf = null;
+
+    window.addEventListener('mousemove', (e) => {
+      cx = e.clientX;
+      cy = e.clientY;
+      customCursor.classList.add('is-active');
+      if (cursorRaf) return;
+      cursorRaf = requestAnimationFrame(() => {
+        customCursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+        cursorRaf = null;
+      });
+    });
+    window.addEventListener('mouseleave', () => customCursor.classList.remove('is-active'));
+
+    const cursorHoverSelector = 'a, button, .magnetic, .tilt-card, input, textarea, .custom-select-trigger, li[role="option"]';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(cursorHoverSelector)) customCursor.classList.add('is-hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(cursorHoverSelector)) customCursor.classList.remove('is-hover');
+    });
+  }
+
+  /* ---------------------------------------------------
      Magnetic buttons
   --------------------------------------------------- */
   if (!isTouch && !reduceMotion) {
@@ -172,6 +203,149 @@
         card.style.transform = '';
       });
     });
+  }
+
+  /* ---------------------------------------------------
+     Revelar por palavra
+  --------------------------------------------------- */
+  const splitEls = document.querySelectorAll('[data-split-reveal]');
+  if (splitEls.length && !reduceMotion) {
+    splitEls.forEach((el) => {
+      const words = el.textContent.trim().split(/\s+/);
+      el.textContent = '';
+      words.forEach((word, i) => {
+        const span = document.createElement('span');
+        span.className = 'split-word';
+        span.style.setProperty('--word-delay', `${i * 0.025}s`);
+        span.textContent = word;
+        el.appendChild(span);
+        el.appendChild(document.createTextNode(' '));
+      });
+    });
+
+    if ('IntersectionObserver' in window) {
+      const splitObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-split-visible');
+            splitObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      splitEls.forEach((el) => splitObserver.observe(el));
+    } else {
+      splitEls.forEach((el) => el.classList.add('is-split-visible'));
+    }
+  } else {
+    splitEls.forEach((el) => el.classList.add('is-split-visible'));
+  }
+
+  /* ---------------------------------------------------
+     Scroll-linked: título preenchendo + cartões empilhando
+  --------------------------------------------------- */
+  const fillTitles = Array.from(document.querySelectorAll('.section-title'));
+  const stackCards = Array.from(document.querySelectorAll('#projects .case-card'));
+
+  function clamp01(value) {
+    return Math.max(0, Math.min(1, value));
+  }
+
+  function updateScrollEffects() {
+    const vh = window.innerHeight;
+
+    fillTitles.forEach((title) => {
+      const rect = title.getBoundingClientRect();
+      const progress = clamp01((vh * 0.85 - rect.top) / (rect.height + vh * 0.35));
+      title.style.setProperty('--fill', `${(progress * 100).toFixed(1)}%`);
+    });
+
+    if (stackCards.length && window.innerWidth >= 640) {
+      stackCards.forEach((card, i) => {
+        const next = stackCards[i + 1];
+        if (!next) {
+          card.style.filter = '';
+          return;
+        }
+        const cardRect = card.getBoundingClientRect();
+        const nextRect = next.getBoundingClientRect();
+        const overlap = Math.max(0, cardRect.bottom - nextRect.top);
+        const progress = clamp01(overlap / (cardRect.height * 0.7));
+        card.style.filter = progress > 0.02
+          ? `brightness(${(1 - progress * 0.4).toFixed(2)}) blur(${(progress * 1.5).toFixed(2)}px)`
+          : '';
+      });
+    } else {
+      stackCards.forEach((card) => { card.style.filter = ''; });
+    }
+  }
+
+  if (!reduceMotion && (fillTitles.length || stackCards.length)) {
+    let scrollEffectsRaf = null;
+    const onScrollEffects = () => {
+      if (scrollEffectsRaf) return;
+      scrollEffectsRaf = requestAnimationFrame(() => {
+        updateScrollEffects();
+        scrollEffectsRaf = null;
+      });
+    };
+    window.addEventListener('scroll', onScrollEffects, { passive: true });
+    window.addEventListener('resize', onScrollEffects);
+    updateScrollEffects();
+  }
+
+  /* ---------------------------------------------------
+     Confete
+  --------------------------------------------------- */
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  function fireConfetti() {
+    if (!confettiCanvas || reduceMotion) return;
+    const ctx = confettiCanvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    confettiCanvas.width = window.innerWidth * dpr;
+    confettiCanvas.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const colors = ['#FFFFFF', '#D4D4D4', '#A3A3A3', '#8A8A8A'];
+    const particles = Array.from({ length: 90 }, () => ({
+      x: window.innerWidth / 2,
+      y: window.innerHeight * 0.65,
+      vx: (Math.random() - 0.5) * 14,
+      vy: -Math.random() * 14 - 6,
+      size: Math.random() * 6 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.3,
+      life: 1,
+    }));
+
+    const gravity = 0.35;
+    function tick() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      let alive = false;
+      particles.forEach((p) => {
+        p.vy += gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.vr;
+        p.life -= 0.012;
+        if (p.life > 0) {
+          alive = true;
+          ctx.save();
+          ctx.globalAlpha = Math.max(p.life, 0);
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+          ctx.restore();
+        }
+      });
+      if (alive) {
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      }
+    }
+    requestAnimationFrame(tick);
   }
 
   /* ---------------------------------------------------
@@ -411,6 +585,7 @@
       const text = `Olá! Meu nome é ${name}.\nTipo de projeto: ${project}\n\n${message}`;
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
+      fireConfetti();
       window.open(url, '_blank', 'noopener');
     });
 
