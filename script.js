@@ -161,27 +161,6 @@
   }
 
   /* ---------------------------------------------------
-     Hero: cargo em janela deslizante
-  --------------------------------------------------- */
-  const roleStrip = document.querySelector('.hero-role-strip');
-  if (roleStrip && !reduceMotion) {
-    const total = roleStrip.children.length;
-    let roleStep = 0;
-    setInterval(() => {
-      roleStep++;
-      roleStrip.style.transition = 'transform 0.5s var(--ease-out)';
-      roleStrip.style.transform = `translateY(-${(roleStep * 100) / total}%)`;
-      if (roleStep === total - 1) {
-        setTimeout(() => {
-          roleStrip.style.transition = 'none';
-          roleStrip.style.transform = 'translateY(0)';
-          roleStep = 0;
-        }, 520);
-      }
-    }, 2800);
-  }
-
-  /* ---------------------------------------------------
      Cursor glow
   --------------------------------------------------- */
   const cursorGlow = document.getElementById('cursorGlow');
@@ -542,59 +521,6 @@
       }
     }
     requestAnimationFrame(tick);
-  }
-
-  /* ---------------------------------------------------
-     Odômetro (contadores do hero)
-  --------------------------------------------------- */
-  const counters = document.querySelectorAll('[data-count]');
-  function animateCounter(el) {
-    const target = String(parseInt(el.getAttribute('data-count'), 10));
-    const suffix = el.getAttribute('data-suffix') || '';
-
-    if (reduceMotion) {
-      el.textContent = target + suffix;
-      return;
-    }
-
-    el.textContent = '';
-    target.split('').forEach((digit, i) => {
-      const box = document.createElement('span');
-      box.className = 'odo-digit';
-      const strip = document.createElement('span');
-      strip.className = 'odo-strip';
-      for (let n = 0; n <= 9; n++) {
-        const s = document.createElement('span');
-        s.textContent = String(n);
-        strip.appendChild(s);
-      }
-      box.appendChild(strip);
-      el.appendChild(box);
-      setTimeout(() => {
-        strip.style.transform = `translateY(-${parseInt(digit, 10) * 10}%)`;
-      }, 120 + i * 110);
-    });
-
-    if (suffix) {
-      const suf = document.createElement('span');
-      suf.className = 'odo-suffix';
-      suf.textContent = suffix;
-      el.appendChild(suf);
-    }
-  }
-
-  if ('IntersectionObserver' in window && counters.length) {
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target);
-          counterObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.6 });
-    counters.forEach((el) => counterObserver.observe(el));
-  } else {
-    counters.forEach(animateCounter);
   }
 
   /* ---------------------------------------------------
