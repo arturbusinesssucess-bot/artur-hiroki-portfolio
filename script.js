@@ -119,6 +119,65 @@
   });
 
   /* ---------------------------------------------------
+     Nav links: embaralhar letras no hover
+  --------------------------------------------------- */
+  if (!isTouch && !reduceMotion) {
+    const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function scrambleText(span) {
+      const original = span.dataset.text;
+      if (span.dataset.scrambling === 'true') return;
+      span.dataset.scrambling = 'true';
+      const length = original.length;
+      const totalFrames = 10;
+      let frame = 0;
+
+      const interval = setInterval(() => {
+        let output = '';
+        for (let i = 0; i < length; i++) {
+          if (original[i] === ' ') { output += ' '; continue; }
+          const revealAt = (i / length) * totalFrames + totalFrames * 0.4;
+          output += frame >= revealAt ? original[i] : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+        }
+        span.textContent = output;
+        frame++;
+        if (frame > totalFrames) {
+          clearInterval(interval);
+          span.textContent = original;
+          span.dataset.scrambling = 'false';
+        }
+      }, 35);
+    }
+
+    navLinks.forEach((link) => {
+      const textNode = Array.from(link.childNodes).find((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
+      if (!textNode) return;
+      const span = document.createElement('span');
+      span.dataset.text = textNode.textContent.trim();
+      span.textContent = span.dataset.text;
+      link.replaceChild(span, textNode);
+      link.addEventListener('mouseenter', () => scrambleText(span));
+    });
+  }
+
+  /* ---------------------------------------------------
+     Hero: cargo trocando de palavra
+  --------------------------------------------------- */
+  const roleBadge = document.querySelector('.hero-role-badge');
+  if (roleBadge && !reduceMotion) {
+    const roles = ['Desenvolvedor Web', 'Criador Digital', 'Freelancer Full-Stack'];
+    let roleIndex = 0;
+    setInterval(() => {
+      roleBadge.classList.add('is-swapping');
+      setTimeout(() => {
+        roleIndex = (roleIndex + 1) % roles.length;
+        roleBadge.textContent = roles[roleIndex];
+        roleBadge.classList.remove('is-swapping');
+      }, 300);
+    }, 2800);
+  }
+
+  /* ---------------------------------------------------
      Cursor glow
   --------------------------------------------------- */
   const cursorGlow = document.getElementById('cursorGlow');
@@ -245,6 +304,7 @@
   --------------------------------------------------- */
   const fillTitles = Array.from(document.querySelectorAll('.section-title'));
   const stackCards = Array.from(document.querySelectorAll('#projects .case-card'));
+  const processList = document.querySelector('.process-list');
 
   function clamp01(value) {
     return Math.max(0, Math.min(1, value));
@@ -258,6 +318,12 @@
       const progress = clamp01((vh * 0.85 - rect.top) / (rect.height + vh * 0.35));
       title.style.setProperty('--fill', `${(progress * 100).toFixed(1)}%`);
     });
+
+    if (processList) {
+      const rect = processList.getBoundingClientRect();
+      const progress = clamp01((vh * 0.75 - rect.top) / rect.height);
+      processList.style.setProperty('--timeline-fill', `${(progress * 100).toFixed(1)}%`);
+    }
 
     if (stackCards.length && window.innerWidth >= 640) {
       stackCards.forEach((card, i) => {
@@ -279,7 +345,7 @@
     }
   }
 
-  if (!reduceMotion && (fillTitles.length || stackCards.length)) {
+  if (!reduceMotion && (fillTitles.length || stackCards.length || processList)) {
     let scrollEffectsRaf = null;
     const onScrollEffects = () => {
       if (scrollEffectsRaf) return;
