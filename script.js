@@ -161,19 +161,23 @@
   }
 
   /* ---------------------------------------------------
-     Hero: cargo trocando de palavra
+     Hero: cargo em janela deslizante
   --------------------------------------------------- */
-  const roleBadge = document.querySelector('.hero-role-badge');
-  if (roleBadge && !reduceMotion) {
-    const roles = ['Desenvolvedor Web', 'Criador Digital', 'Freelancer Full-Stack'];
-    let roleIndex = 0;
+  const roleStrip = document.querySelector('.hero-role-strip');
+  if (roleStrip && !reduceMotion) {
+    const total = roleStrip.children.length;
+    let roleStep = 0;
     setInterval(() => {
-      roleBadge.classList.add('is-swapping');
-      setTimeout(() => {
-        roleIndex = (roleIndex + 1) % roles.length;
-        roleBadge.textContent = roles[roleIndex];
-        roleBadge.classList.remove('is-swapping');
-      }, 300);
+      roleStep++;
+      roleStrip.style.transition = 'transform 0.5s var(--ease-out)';
+      roleStrip.style.transform = `translateY(-${(roleStep * 100) / total}%)`;
+      if (roleStep === total - 1) {
+        setTimeout(() => {
+          roleStrip.style.transition = 'none';
+          roleStrip.style.transform = 'translateY(0)';
+          roleStep = 0;
+        }, 520);
+      }
     }, 2800);
   }
 
@@ -360,6 +364,132 @@
   }
 
   /* ---------------------------------------------------
+     Projetos: imagem chega em faixas
+  --------------------------------------------------- */
+  const caseVisuals = document.querySelectorAll('.case-visual');
+  if (caseVisuals.length && !reduceMotion && 'IntersectionObserver' in window) {
+    const STRIP_COUNT = 5;
+    const stripObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.querySelector('.case-strips').classList.add('is-out');
+          stripObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    caseVisuals.forEach((visual) => {
+      if (!visual.querySelector('.case-shot')) return;
+      const strips = document.createElement('div');
+      strips.className = 'case-strips';
+      for (let i = 0; i < STRIP_COUNT; i++) {
+        const strip = document.createElement('div');
+        strip.className = 'case-strip';
+        strip.style.transitionDelay = `${i * 0.05}s`;
+        strips.appendChild(strip);
+      }
+      visual.appendChild(strips);
+      stripObserver.observe(visual);
+    });
+  }
+
+  /* ---------------------------------------------------
+     Contato: texto de partículas
+  --------------------------------------------------- */
+  const particleCanvas = document.querySelector('.particle-heading');
+  if (particleCanvas && isTouch) {
+    particleCanvas.style.display = 'none';
+  } else if (particleCanvas && !reduceMotion) {
+    const pCtx = particleCanvas.getContext('2d');
+    const pText = particleCanvas.dataset.text || '';
+    const pMouse = { x: -999, y: -999 };
+    let pPoints = [];
+    let pRaf = null;
+
+    function buildParticleText() {
+      particleCanvas.width = particleCanvas.clientWidth;
+      particleCanvas.height = particleCanvas.clientHeight;
+      const off = document.createElement('canvas');
+      off.width = particleCanvas.width;
+      off.height = particleCanvas.height;
+      const offCtx = off.getContext('2d');
+      offCtx.fillStyle = '#fff';
+      offCtx.textAlign = 'center';
+      offCtx.textBaseline = 'middle';
+      const fontFamily = "'Fraunces', Georgia, serif";
+      let size = Math.min(56, particleCanvas.width / 8);
+      offCtx.font = `700 ${size}px ${fontFamily}`;
+      while (offCtx.measureText(pText).width > particleCanvas.width * 0.9 && size > 12) {
+        size -= 2;
+        offCtx.font = `700 ${size}px ${fontFamily}`;
+      }
+      offCtx.fillText(pText, particleCanvas.width / 2, particleCanvas.height / 2);
+
+      const data = offCtx.getImageData(0, 0, particleCanvas.width, particleCanvas.height).data;
+      pPoints = [];
+      const step = 3;
+      for (let y = 0; y < particleCanvas.height; y += step) {
+        for (let x = 0; x < particleCanvas.width; x += step) {
+          if (data[(y * particleCanvas.width + x) * 4 + 3] > 128) {
+            pPoints.push({
+              ox: x, oy: y,
+              x: Math.random() * particleCanvas.width,
+              y: Math.random() * particleCanvas.height,
+              vx: 0, vy: 0,
+            });
+          }
+        }
+      }
+    }
+    buildParticleText();
+    window.addEventListener('resize', buildParticleText);
+
+    particleCanvas.addEventListener('mousemove', (e) => {
+      const r = particleCanvas.getBoundingClientRect();
+      pMouse.x = e.clientX - r.left;
+      pMouse.y = e.clientY - r.top;
+    });
+    particleCanvas.addEventListener('mouseleave', () => { pMouse.x = pMouse.y = -999; });
+
+    function tickParticles() {
+      pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+      pCtx.fillStyle = 'rgba(255,255,255,0.85)';
+      pPoints.forEach((p) => {
+        const dx = p.x - pMouse.x;
+        const dy = p.y - pMouse.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 60) {
+          const f = (60 - d) / 60;
+          p.vx += (dx / d) * f * 2.2;
+          p.vy += (dy / d) * f * 2.2;
+        }
+        p.vx += (p.ox - p.x) * 0.09;
+        p.vy += (p.oy - p.y) * 0.09;
+        p.vx *= 0.8;
+        p.vy *= 0.8;
+        p.x += p.vx;
+        p.y += p.vy;
+        pCtx.fillRect(p.x, p.y, 1.8, 1.8);
+      });
+      pRaf = requestAnimationFrame(tickParticles);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const particleObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          if (!pRaf) tickParticles();
+        } else if (pRaf) {
+          cancelAnimationFrame(pRaf);
+          pRaf = null;
+        }
+      }, { threshold: 0 });
+      particleObserver.observe(particleCanvas);
+    } else {
+      tickParticles();
+    }
+  }
+
+  /* ---------------------------------------------------
      Confete
   --------------------------------------------------- */
   const confettiCanvas = document.getElementById('confettiCanvas');
@@ -415,24 +545,42 @@
   }
 
   /* ---------------------------------------------------
-     Animated counters
+     Odômetro (contadores do hero)
   --------------------------------------------------- */
   const counters = document.querySelectorAll('[data-count]');
   function animateCounter(el) {
-    const target = parseFloat(el.getAttribute('data-count'));
-    const prefix = el.getAttribute('data-prefix') || '';
+    const target = String(parseInt(el.getAttribute('data-count'), 10));
     const suffix = el.getAttribute('data-suffix') || '';
-    const duration = reduceMotion ? 1 : 1200;
-    const startTime = performance.now();
 
-    function tick(now) {
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const value = Math.round(target * eased);
-      el.textContent = `${prefix}${value}${suffix}`;
-      if (progress < 1) requestAnimationFrame(tick);
+    if (reduceMotion) {
+      el.textContent = target + suffix;
+      return;
     }
-    requestAnimationFrame(tick);
+
+    el.textContent = '';
+    target.split('').forEach((digit, i) => {
+      const box = document.createElement('span');
+      box.className = 'odo-digit';
+      const strip = document.createElement('span');
+      strip.className = 'odo-strip';
+      for (let n = 0; n <= 9; n++) {
+        const s = document.createElement('span');
+        s.textContent = String(n);
+        strip.appendChild(s);
+      }
+      box.appendChild(strip);
+      el.appendChild(box);
+      setTimeout(() => {
+        strip.style.transform = `translateY(-${parseInt(digit, 10) * 10}%)`;
+      }, 120 + i * 110);
+    });
+
+    if (suffix) {
+      const suf = document.createElement('span');
+      suf.className = 'odo-suffix';
+      suf.textContent = suffix;
+      el.appendChild(suf);
+    }
   }
 
   if ('IntersectionObserver' in window && counters.length) {

@@ -312,8 +312,7 @@ body.is-loaded [data-hero-item] { opacity: 1; transform: translateY(0); }
 body.is-loaded .hero-ticker[data-hero-item] { transition-delay: 0.05s; }
 body.is-loaded .hero-corner-tl[data-hero-item] { transition-delay: 0.15s; }
 body.is-loaded .hero-corner-tr[data-hero-item] { transition-delay: 0.25s; }
-body.is-loaded .hero-stage-photo[data-hero-item] { transition-delay: 0.35s; }
-body.is-loaded .hero-corner-bl[data-hero-item] { transition-delay: 0.45s; }
+body.is-loaded .hero-corner-bl[data-hero-item] { transition-delay: 0.35s; }
 body.is-loaded .hero-corner-br[data-hero-item] { transition-delay: 0.5s; }
 body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
 
@@ -733,35 +732,28 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
   font-size: var(--fs-base);
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.hero-role-badge.is-swapping {
-  opacity: 0;
-  transform: translateY(6px);
-}
-
-.hero-stage-photo {
+.hero-role-window {
   position: relative;
-  z-index: 1;
-  align-self: center;
-  margin-inline: auto;
-  width: min(70%, 280px);
-  aspect-ratio: 2 / 3;
-  border-radius: var(--radius-lg);
+  height: 1.3em;
   overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-card);
+  display: inline-block;
+  vertical-align: bottom;
 }
 
-.hero-stage-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.hero-role-window span {
+  display: block;
+  transition: transform 0.5s var(--ease-out);
+  white-space: nowrap;
+}
 
 @media (min-width: 900px) {
   .hero-stage {
     flex-direction: row;
     align-items: flex-end;
     justify-content: center;
-    min-height: 620px;
+    min-height: 480px;
     padding: var(--sp-8) var(--sp-8) 0;
   }
 
@@ -774,8 +766,6 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
   .hero-corner-tr { top: var(--sp-8); right: var(--sp-8); align-items: flex-end; text-align: right; }
   .hero-corner-bl { bottom: var(--sp-8); left: var(--sp-8); flex-direction: row; }
   .hero-corner-br { bottom: var(--sp-8); right: var(--sp-8); align-items: flex-end; }
-
-  .hero-stage-photo { width: min(36%, 420px); }
 }
 
 .hero-footer {
@@ -838,12 +828,31 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
 .hero-stat { display: flex; flex-direction: column; gap: var(--sp-1); }
 
 .hero-stat-num {
+  display: inline-flex;
+  align-items: baseline;
   font-family: var(--font-display);
   font-size: var(--fs-xl);
   font-weight: 700;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
+
+.odo-digit {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.odo-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.odo-strip span { height: 1em; line-height: 1; display: block; }
+
+.odo-suffix { margin-left: 1px; }
 
 .hero-stat-label {
   font-size: var(--fs-xs);
@@ -1314,6 +1323,23 @@ body.is-loaded .hero-footer[data-hero-item] { transition-delay: 0.55s; }
   transform: scale(1.05);
   filter: grayscale(0%) contrast(1.05);
 }
+
+.case-strips {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  pointer-events: none;
+}
+
+.case-strip {
+  flex: 1;
+  background: var(--surface-2);
+  transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+}
+
+.case-strips.is-out .case-strip:nth-child(odd) { transform: translateY(-100%); opacity: 0; }
+.case-strips.is-out .case-strip:nth-child(even) { transform: translateY(100%); opacity: 0; }
 
 .case-info {
   padding: var(--sp-8);
@@ -2140,6 +2166,20 @@ body.has-custom-cursor select {
 }
 
 /* ===================================================
+   Contato — texto de partículas
+=================================================== */
+.particle-heading {
+  display: block;
+  width: 100%;
+  height: 140px;
+  margin: var(--sp-8) 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: crosshair;
+}
+
+/* ===================================================
    Confete
 =================================================== */
 .confetti-canvas {
@@ -2187,6 +2227,10 @@ body.has-custom-cursor select {
   .case-card { position: static !important; }
 
   .process-list::after { height: 100% !important; }
-  .hero-role-badge.is-swapping { opacity: 1 !important; transform: none !important; }
   .tech-category:hover .tech-category-head svg { transform: none !important; }
+
+  .hero-role-window span { transition: none !important; }
+  .odo-strip { transition: none !important; }
+  .case-strips { display: none !important; }
+  .particle-heading { display: none !important; }
 }
