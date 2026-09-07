@@ -12,7 +12,16 @@
   const MAX_LOAD_MS = 2000;
   const start = performance.now();
 
+  /* Mede a largura real do texto (em px) pra máquina de escrever não
+     cortar palavras — a unidade "ch" não bate com fontes proporcionais */
+  function measureTypewriterWidths() {
+    document.querySelectorAll('.fx-type').forEach((el) => {
+      el.style.setProperty('--fx-full-width', `${el.scrollWidth}px`);
+    });
+  }
+
   function hideLoader() {
+    measureTypewriterWidths();
     const elapsed = performance.now() - start;
     const wait = Math.min(Math.max(MIN_LOAD_MS - elapsed, 0), MAX_LOAD_MS);
     setTimeout(() => {

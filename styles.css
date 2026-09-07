@@ -650,6 +650,10 @@ body.is-loaded .hero-info-row[data-hero-item] { transition-delay: 0.58s; }
   max-width: 44ch;
 }
 
+@media (max-width: 640px) {
+  .hero-tagline { font-size: clamp(0.8125rem, 4vw, 1.0625rem); }
+}
+
 .hero-desc {
   margin-top: var(--sp-4);
   font-size: var(--fs-base);
@@ -2010,7 +2014,7 @@ body.is-loaded .fx-type {
   animation: fxTyping 2.4s steps(41) 1.1s forwards, fxCaret 0.8s step-end 1.1s infinite;
 }
 
-@keyframes fxTyping { to { width: min(42ch, 100%); } }
+@keyframes fxTyping { to { width: var(--fx-full-width, min(42ch, 100%)); } }
 @keyframes fxCaret { 50% { border-color: transparent; } }
 
 /* Contador de números */
