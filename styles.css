@@ -1881,56 +1881,6 @@ body.is-loaded .hero-info-row[data-hero-item] { transition-delay: 0.58s; }
 }
 
 /* ===================================================
-   Custom cursor
-=================================================== */
-body.has-custom-cursor,
-body.has-custom-cursor a,
-body.has-custom-cursor button,
-body.has-custom-cursor input,
-body.has-custom-cursor textarea,
-body.has-custom-cursor select {
-  cursor: none;
-}
-
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 22px;
-  height: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out),
-    background-color 0.25s var(--ease-out), opacity 0.2s ease;
-  mix-blend-mode: difference;
-}
-
-.custom-cursor::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  background: #fff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s ease;
-}
-
-.custom-cursor.is-active { opacity: 1; }
-.custom-cursor.is-hover { width: 54px; height: 54px; background: rgba(255, 255, 255, 0.12); }
-.custom-cursor.is-hover::before { opacity: 0; }
-
-@media (hover: none) {
-  .custom-cursor { display: none !important; }
-}
-
-/* ===================================================
    Section titles — preenchem conforme rola
 =================================================== */
 .section-title {
@@ -2146,11 +2096,6 @@ body.is-loaded [data-hero-item].fx-blur {
   .loader { display: none !important; }
   .cursor-glow { display: none !important; }
   .bg-orb, .hero-glow, .mockup-float { animation: none !important; }
-
-  .custom-cursor { display: none !important; }
-  body.has-custom-cursor,
-  body.has-custom-cursor a,
-  body.has-custom-cursor button { cursor: auto !important; }
 
   .section-title { background-image: none !important; color: var(--text-primary) !important; }
 

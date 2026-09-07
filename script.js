@@ -179,37 +179,6 @@
   }
 
   /* ---------------------------------------------------
-     Custom cursor
-  --------------------------------------------------- */
-  const customCursor = document.getElementById('customCursor');
-  if (customCursor && !isTouch && !reduceMotion) {
-    document.body.classList.add('has-custom-cursor');
-    let cx = 0;
-    let cy = 0;
-    let cursorRaf = null;
-
-    window.addEventListener('mousemove', (e) => {
-      cx = e.clientX;
-      cy = e.clientY;
-      customCursor.classList.add('is-active');
-      if (cursorRaf) return;
-      cursorRaf = requestAnimationFrame(() => {
-        customCursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-        cursorRaf = null;
-      });
-    });
-    window.addEventListener('mouseleave', () => customCursor.classList.remove('is-active'));
-
-    const cursorHoverSelector = 'a, button, .magnetic, .tilt-card, input, textarea, .custom-select-trigger, li[role="option"]';
-    document.addEventListener('mouseover', (e) => {
-      if (e.target.closest(cursorHoverSelector)) customCursor.classList.add('is-hover');
-    });
-    document.addEventListener('mouseout', (e) => {
-      if (e.target.closest(cursorHoverSelector)) customCursor.classList.remove('is-hover');
-    });
-  }
-
-  /* ---------------------------------------------------
      Magnetic buttons
   --------------------------------------------------- */
   if (!isTouch && !reduceMotion) {
