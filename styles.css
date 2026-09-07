@@ -1547,6 +1547,8 @@ body.is-loaded .hero-info-row[data-hero-item] { transition-delay: 0.58s; }
   transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 
+.form-field textarea { resize: none; }
+
 .form-field input::placeholder,
 .form-field textarea::placeholder { color: transparent; }
 
