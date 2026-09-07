@@ -170,24 +170,6 @@
   }
 
   /* ---------------------------------------------------
-     Cursor glow
-  --------------------------------------------------- */
-  const cursorGlow = document.getElementById('cursorGlow');
-  if (cursorGlow && !isTouch && !reduceMotion) {
-    let raf = null;
-    window.addEventListener('mousemove', (e) => {
-      cursorGlow.classList.add('is-active');
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        cursorGlow.style.setProperty('--cx', `${e.clientX - 210}px`);
-        cursorGlow.style.setProperty('--cy', `${e.clientY - 210}px`);
-        raf = null;
-      });
-    });
-    window.addEventListener('mouseleave', () => cursorGlow.classList.remove('is-active'));
-  }
-
-  /* ---------------------------------------------------
      Magnetic buttons
   --------------------------------------------------- */
   if (!isTouch && !reduceMotion) {
