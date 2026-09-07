@@ -5,9 +5,10 @@
 :root {
   /* Color */
   --bg: #050505;
-  --bg-secondary: #0D0D0D;
-  --surface: #141414;
-  --surface-2: #1C1C1C;
+  /* Translúcidos para a atmosfera do fundo atravessar o site inteiro */
+  --bg-secondary: rgba(13, 13, 13, 0.62);
+  --surface: rgba(20, 20, 20, 0.78);
+  --surface-2: rgba(28, 28, 28, 0.82);
   --border: #2A2A2A;
 
   --blue: #A3A3A3;
@@ -206,11 +207,27 @@ summary:focus-visible,
   pointer-events: none;
 }
 
+/* Mesma fumaça prateada do vídeo do hero, desfocada, atrás do site inteiro */
+.bg-fx::before {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  background: url("assets/bg-texture.jpg") center / cover no-repeat;
+  opacity: 0.42;
+  animation: bgDrift 46s var(--ease-in-out) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes bgDrift {
+  from { transform: scale(1.04) translate3d(-1.5%, 0, 0); }
+  to { transform: scale(1.14) translate3d(2%, -2.5%, 0); }
+}
+
 .bg-orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.35;
+  opacity: 0.22;
   will-change: transform;
 }
 
@@ -1800,7 +1817,8 @@ body.is-loaded .hero-headline em {
   left: 0;
   right: 0;
   top: calc(100% + var(--sp-2));
-  background: var(--surface-2);
+  /* Opaco de propósito: menu suspenso não pode deixar o conteúdo aparecer atrás */
+  background: #1C1C1C;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
@@ -2221,6 +2239,7 @@ body.is-loaded [data-hero-item].fx-blur {
 
   .loader { display: none !important; }
   .bg-orb, .hero-glow, .mockup-float { animation: none !important; }
+  .bg-fx::before { animation: none !important; transform: none !important; }
 
   .section-title { background-image: none !important; color: var(--text-primary) !important; }
 
