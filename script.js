@@ -343,6 +343,53 @@
   }
 
   /* ---------------------------------------------------
+     Esqueleto carregando: some quando a imagem do case chega
+  --------------------------------------------------- */
+  document.querySelectorAll('.case-shot').forEach((img) => {
+    const markLoaded = () => {
+      const visual = img.closest('.case-visual');
+      if (visual) visual.classList.add('is-img-loaded');
+    };
+    if (img.complete) markLoaded();
+    else img.addEventListener('load', markLoaded, { once: true });
+  });
+
+  /* ---------------------------------------------------
+     Contador de números
+  --------------------------------------------------- */
+  const fxCounters = document.querySelectorAll('.fx-count');
+  function animateFxCount(el) {
+    const target = parseFloat(el.dataset.alvo);
+    const casas = Number(el.dataset.casas || 0);
+    const sufixo = el.dataset.sufixo || '';
+    const duration = reduceMotion ? 1 : 1600;
+    let startTime = null;
+
+    function step(now) {
+      if (startTime === null) startTime = now;
+      const progress = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = (target * eased).toFixed(casas) + sufixo;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if ('IntersectionObserver' in window && fxCounters.length) {
+    const fxCountObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateFxCount(entry.target);
+          fxCountObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    fxCounters.forEach((el) => fxCountObserver.observe(el));
+  } else {
+    fxCounters.forEach(animateFxCount);
+  }
+
+  /* ---------------------------------------------------
      Projetos: imagem chega em faixas
   --------------------------------------------------- */
   const caseVisuals = document.querySelectorAll('.case-visual');
