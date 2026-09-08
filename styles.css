@@ -6,7 +6,7 @@
   /* Color */
   --bg: #050505;
   /* Translúcidos para a atmosfera do fundo atravessar o site inteiro */
-  --bg-secondary: rgba(13, 13, 13, 0.62);
+  --bg-secondary: rgba(13, 13, 13, 0.76);
   --surface: rgba(20, 20, 20, 0.78);
   --surface-2: rgba(28, 28, 28, 0.82);
   --border: #2A2A2A;
@@ -207,20 +207,22 @@ summary:focus-visible,
   pointer-events: none;
 }
 
-/* Mesma fumaça prateada do vídeo do hero, desfocada, atrás do site inteiro */
-.bg-fx::before {
-  content: '';
+/* Vídeo rodando atrás do site inteiro */
+.bg-video {
   position: absolute;
-  inset: -12%;
-  background: url("assets/bg-texture.jpg") center / cover no-repeat;
-  opacity: 0.42;
-  animation: bgDrift 46s var(--ease-in-out) infinite alternate;
-  will-change: transform;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-@keyframes bgDrift {
-  from { transform: scale(1.04) translate3d(-1.5%, 0, 0); }
-  to { transform: scale(1.14) translate3d(2%, -2.5%, 0); }
+/* Véu geral: segura o brilho da onda para o texto continuar legível */
+.bg-fx::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5, 5, 5, 0.5) 0%, rgba(5, 5, 5, 0.62) 100%);
 }
 
 .bg-orb {
@@ -320,7 +322,8 @@ body.is-loaded .hero-info-row[data-hero-item] { transition-delay: 0.72s; }
 
 .container-narrow { max-width: 720px; }
 
-.section { padding-block: var(--sp-24); position: relative; }
+/* Véu por seção: o vídeo continua rodando atrás, mas o conteúdo lê bem */
+.section { padding-block: var(--sp-24); position: relative; background: rgba(5, 5, 5, 0.68); }
 .section-alt { background: var(--bg-secondary); }
 
 .section-alt::before {
@@ -618,36 +621,19 @@ body.is-loaded .hero-info-row[data-hero-item] { transition-delay: 0.72s; }
   overflow: hidden;
 }
 
-/* Fundo em vídeo do hero */
-.hero-video-wrap {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  background: var(--bg);
-}
-
-.hero-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Escurece o lado do texto e funde com a seção seguinte */
-.hero-video-wrap::after {
+/* Escurece o lado do título no hero, deixando a onda respirar à direita */
+.hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(5, 5, 5, 0.92) 0%, rgba(5, 5, 5, 0.7) 42%, rgba(5, 5, 5, 0.25) 100%),
-    linear-gradient(180deg, rgba(5, 5, 5, 0.75) 0%, rgba(5, 5, 5, 0) 30%, rgba(5, 5, 5, 0.85) 100%);
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(5, 5, 5, 0.78) 0%, rgba(5, 5, 5, 0.42) 45%, rgba(5, 5, 5, 0) 100%);
 }
 
 @media (max-width: 900px) {
-  .hero-video-wrap::after {
-    background: linear-gradient(180deg, rgba(5, 5, 5, 0.88) 0%, rgba(5, 5, 5, 0.72) 45%, rgba(5, 5, 5, 0.95) 100%);
+  .hero::before {
+    background: linear-gradient(180deg, rgba(5, 5, 5, 0.6) 0%, rgba(5, 5, 5, 0.5) 50%, rgba(5, 5, 5, 0.75) 100%);
   }
 }
 
@@ -2239,7 +2225,12 @@ body.is-loaded [data-hero-item].fx-blur {
 
   .loader { display: none !important; }
   .bg-orb, .hero-glow, .mockup-float { animation: none !important; }
-  .bg-fx::before { animation: none !important; transform: none !important; }
+
+  /* Sem vídeo em movimento — fica só o quadro estático desfocado */
+  .bg-video { display: none !important; }
+  .bg-fx {
+    background: url("assets/bg-texture.jpg") center / cover no-repeat;
+  }
 
   .section-title { background-image: none !important; color: var(--text-primary) !important; }
 
@@ -2270,9 +2261,4 @@ body.is-loaded [data-hero-item].fx-blur {
     filter: none !important;
   }
 
-  /* Sem vídeo em movimento — mostra só o quadro estático */
-  .hero-video { display: none !important; }
-  .hero-video-wrap {
-    background: url("assets/hero-bg-poster.jpg") center / cover no-repeat;
-  }
 }
