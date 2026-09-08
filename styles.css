@@ -468,6 +468,9 @@ body.is-loaded .hero-info-row[data-hero-item] { transition-delay: 0.72s; }
 }
 
 .nav-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: var(--fs-lg);
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -843,6 +846,7 @@ body.is-loaded .hero-headline em {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
+  min-height: 44px;
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--text-secondary);
@@ -1972,9 +1976,15 @@ body.is-loaded .hero-headline em {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--sp-6);
+  align-items: center;
+  gap: var(--sp-2) var(--sp-6);
   font-size: var(--fs-sm);
   color: var(--text-secondary);
+}
+.footer-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 .footer-nav a:hover { color: var(--text-primary); }
 
