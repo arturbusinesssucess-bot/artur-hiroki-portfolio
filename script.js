@@ -243,9 +243,34 @@
   }
 
   /* ---------------------------------------------------
-     Scroll-linked: título preenchendo + cartões empilhando
+     Scroll-linked: título preenchendo palavra por palavra + cartões empilhando
   --------------------------------------------------- */
-  const fillTitles = Array.from(document.querySelectorAll('.section-title'));
+
+  /* Quebra o título em palavras — a cor de cada uma é controlada
+     por JS, então o preenchimento segue a ordem de leitura mesmo
+     quando o título quebra em duas linhas (não corta palavra ao meio) */
+  function wrapTitleWords(el) {
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = '';
+    return words.map((word, i) => {
+      const span = document.createElement('span');
+      span.className = 'fill-word';
+      span.textContent = word;
+      el.appendChild(span);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+      return span;
+    });
+  }
+
+  const FILL_ZONE_WORDS = 3; // quantas palavras formam a zona de degradê
+  const FILL_MUTED = 138; // #8A8A8A
+  const FILL_BRIGHT = 255; // #FFFFFF
+
+  const fillTitles = Array.from(document.querySelectorAll('.section-title')).map((title) => ({
+    el: title,
+    words: wrapTitleWords(title),
+  }));
+
   const stackCards = Array.from(document.querySelectorAll('#projects .case-card'));
   const processList = document.querySelector('.process-list');
 
@@ -256,10 +281,16 @@
   function updateScrollEffects() {
     const vh = window.innerHeight;
 
-    fillTitles.forEach((title) => {
-      const rect = title.getBoundingClientRect();
+    fillTitles.forEach(({ el, words }) => {
+      const rect = el.getBoundingClientRect();
       const progress = clamp01((vh * 0.85 - rect.top) / (rect.height + vh * 0.35));
-      title.style.setProperty('--fill', `${(progress * 100).toFixed(1)}%`);
+      const totalSteps = Math.max(1, words.length - 1 + FILL_ZONE_WORDS);
+      const front = progress * totalSteps;
+      words.forEach((word, i) => {
+        const local = clamp01((front - i) / FILL_ZONE_WORDS);
+        const v = Math.round(FILL_MUTED + (FILL_BRIGHT - FILL_MUTED) * local);
+        word.style.color = `rgb(${v}, ${v}, ${v})`;
+      });
     });
 
     if (processList) {
@@ -393,6 +424,7 @@
     let pRaf = null;
 
     function buildParticleText() {
+      if (particleCanvas.clientWidth === 0 || particleCanvas.clientHeight === 0) return;
       particleCanvas.width = particleCanvas.clientWidth;
       particleCanvas.height = particleCanvas.clientHeight;
       const off = document.createElement('canvas');
@@ -429,6 +461,13 @@
     }
     buildParticleText();
     window.addEventListener('resize', buildParticleText);
+
+    if ('ResizeObserver' in window) {
+      const particleSizeObserver = new ResizeObserver(() => {
+        if (pPoints.length === 0) buildParticleText();
+      });
+      particleSizeObserver.observe(particleCanvas);
+    }
 
     particleCanvas.addEventListener('mousemove', (e) => {
       const r = particleCanvas.getBoundingClientRect();

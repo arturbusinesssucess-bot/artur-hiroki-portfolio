@@ -2021,13 +2021,10 @@ body.is-loaded .hero-headline em {
 }
 
 /* ===================================================
-   Section titles — preenchem conforme rola
+   Section titles — preenchem palavra por palavra ao rolar
 =================================================== */
-.section-title {
-  background-image: linear-gradient(90deg, var(--text-primary) var(--fill, 100%), var(--text-muted) var(--fill, 100%));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.section-title .fill-word {
+  color: var(--text-muted);
 }
 
 /* ===================================================
@@ -2199,15 +2196,17 @@ body.is-loaded .fx-type {
 
 .footer-nav a:hover::after { transform: scaleX(1); }
 
-/* Desfoque que resolve — entra fora de foco e ganha nitidez */
+/* Desfoque que resolve — entra fora de foco e ganha nitidez.
+   Duração alongada (1.6s) pra dar tempo real de ver o desfoque
+   dissolvendo — em 0.8s ele quase não dava tempo de perceber. */
 [data-reveal].fx-blur,
 [data-hero-item].fx-blur {
-  filter: blur(14px);
+  filter: blur(18px);
   transform: scale(1.04);
 }
 
-[data-reveal].fx-blur { transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out), filter var(--dur-slow) var(--ease-out); }
-[data-hero-item].fx-blur { transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out), filter 0.8s var(--ease-out); }
+[data-reveal].fx-blur { transition: opacity 1.6s var(--ease-out), transform 1.6s var(--ease-out), filter 1.6s ease-out; }
+[data-hero-item].fx-blur { transition: opacity 1.6s var(--ease-out), transform 1.6s var(--ease-out), filter 1.6s ease-out; }
 
 [data-reveal].fx-blur.is-visible,
 body.is-loaded [data-hero-item].fx-blur {
@@ -2242,7 +2241,7 @@ body.is-loaded [data-hero-item].fx-blur {
     background: url("assets/bg-texture.jpg") center / cover no-repeat;
   }
 
-  .section-title { background-image: none !important; color: var(--text-primary) !important; }
+  .section-title .fill-word { color: var(--text-primary) !important; }
 
   [data-split-reveal] .split-word {
     opacity: 1 !important;
