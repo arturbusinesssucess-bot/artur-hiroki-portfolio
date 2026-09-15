@@ -1162,15 +1162,18 @@ body.is-loaded .hero-headline em {
 .case-visual-3 { background: linear-gradient(135deg, #1E1E1E 0%, #A6A6A6 100%); }
 .case-visual-4 { background: linear-gradient(135deg, #161616 0%, #E0E0E0 100%); }
 
-.case-card:has(.case-visual-3) {
+.case-card:has(.case-shot) {
   align-items: start;
 }
 
-.case-visual-3:has(.case-shot) {
+.case-visual:has(.case-shot) {
   width: 100%;
   min-height: 0;
-  aspect-ratio: 1280 / 900;
 }
+
+.case-visual-1:has(.case-shot) { aspect-ratio: 1917 / 903; }
+.case-visual-2:has(.case-shot) { aspect-ratio: 1906 / 902; }
+.case-visual-3:has(.case-shot) { aspect-ratio: 1280 / 900; }
 
 /* Device mockups */
 .device {
