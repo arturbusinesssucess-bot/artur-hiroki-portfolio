@@ -1155,6 +1155,8 @@ body.is-loaded .hero-headline em {
 }
 
 .case-visual:has(.case-shot) {
+  min-height: 0;
+  width: 100%;
   padding: 0;
 }
 
