@@ -1505,7 +1505,7 @@ body.is-loaded .hero-headline em {
   transform: translateX(6px);
 }
 .process-step:hover .process-icon {
-  background: rgba(229, 229, 229, 0.18);
+  background: #262626;
   transform: scale(1.08);
 }
 
@@ -1515,7 +1515,8 @@ body.is-loaded .hero-headline em {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
-  background: rgba(229, 229, 229, 0.1);
+  background: #1c1c1c;
+  border: 1px solid rgba(229, 229, 229, 0.12);
   color: var(--blue-light);
   display: flex;
   align-items: center;
