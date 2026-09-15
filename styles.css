@@ -1124,7 +1124,6 @@ body.is-loaded .hero-headline em {
 .case-card {
   display: grid;
   grid-template-columns: 1fr;
-  align-items: start;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -1155,8 +1154,6 @@ body.is-loaded .hero-headline em {
 }
 
 .case-visual:has(.case-shot) {
-  min-height: 0;
-  width: 100%;
   padding: 0;
 }
 
@@ -1165,9 +1162,15 @@ body.is-loaded .hero-headline em {
 .case-visual-3 { background: linear-gradient(135deg, #1E1E1E 0%, #A6A6A6 100%); }
 .case-visual-4 { background: linear-gradient(135deg, #161616 0%, #E0E0E0 100%); }
 
-.case-visual-1:has(.case-shot) { aspect-ratio: 1917 / 903; }
-.case-visual-2:has(.case-shot) { aspect-ratio: 1906 / 902; }
-.case-visual-3:has(.case-shot) { aspect-ratio: 1280 / 900; }
+.case-card:has(.case-visual-3) {
+  align-items: start;
+}
+
+.case-visual-3:has(.case-shot) {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 1280 / 900;
+}
 
 /* Device mockups */
 .device {
@@ -1254,7 +1257,7 @@ body.is-loaded .hero-headline em {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   filter: grayscale(20%) contrast(1.05);
   opacity: 0;
