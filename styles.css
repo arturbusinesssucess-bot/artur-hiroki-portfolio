@@ -1488,6 +1488,8 @@ body.is-loaded .hero-headline em {
 }
 
 .process-step {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 44px 40px 1fr;
   align-items: start;
