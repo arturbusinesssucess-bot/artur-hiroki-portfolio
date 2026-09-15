@@ -2063,21 +2063,10 @@ body.is-loaded .hero-headline em {
 }
 
 /* ===================================================
-   Projetos — cartões que empilham ao rolar
+   Projetos — lista simples, sem sobreposição
 =================================================== */
 @media (min-width: 640px) {
-  .case-list { gap: var(--sp-24); }
-
-  .case-card {
-    position: sticky;
-    top: 96px;
-  }
-
-  .case-card:nth-child(1) { z-index: 1; }
-  .case-card:nth-child(2) { z-index: 2; }
-  .case-card:nth-child(3) { z-index: 3; }
-  .case-card:nth-child(4) { z-index: 4; }
-  .case-card:nth-child(5) { z-index: 5; }
+  .case-list { gap: var(--sp-8); }
 }
 
 /* ===================================================
